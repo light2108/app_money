@@ -20,7 +20,9 @@ class Task extends Model
         'level',
         'select',
         'status',
-        'type'
+        'type',
+        'grade',
+        'code'
     ];
     public function question_answer(){
         return $this->hasMany('App\Models\QuestionAnswer', 'task_id', 'id');

@@ -89,24 +89,25 @@ $(document).ready(function(){
         // alert(value);
         count=1;
         if(value==0){
+            // $('.grade').css('display', 'block');
             $('#link').html(`
                 <label>Link</label>
                 <input type="text" name="link" required class="form-control">
                 <hr>
                 <div id="new">
-                <div class="newcreate">
-                <div class="row">
-                    <div class="col-11">
-                        <label>Bước `+count+`</label>
-                        <input type="text" required name="step[]" class="form-control">
-                    </div>
-                    <div class="col-1">
-                        <a href="javascript:void(0)" style="position: relative;top:40%" class="plus-step"><i class="fa fa-3x fa-plus-circle"></i></a>
+                    <div class="newcreate">
+                        <div class="row">
+                            <div class="col-11">
+                                <label>Bước `+count+`</label>
+                                <input type="text" required name="step[]" class="form-control">
+                            </div>
+                            <div class="col-1">
+                                <a href="javascript:void(0)" style="position: relative;top:40%" class="plus-step"><i class="fa fa-3x fa-plus-circle"></i></a>
+                            </div>
+                        </div>
+                        <hr>
                     </div>
                 </div>
-                <hr>
-                </div>
-            </div>
             `);
             $('.plus-step').click(function(){
                 ++count;
@@ -133,6 +134,7 @@ $(document).ready(function(){
                 })
             });
         }else{
+            $('.grade').css('display', 'none');
             $('#link').html(``);
         }
     });

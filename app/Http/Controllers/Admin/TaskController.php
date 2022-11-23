@@ -8,7 +8,15 @@ use App\Models\Task;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use App\Models\Type;
-
+function generateRandomString($length = 6) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
 class TaskController extends Controller
 {
     public function index()
@@ -25,12 +33,20 @@ class TaskController extends Controller
             if ($data['select'] == 1) {
                 $data['link'] = '';
                 $data['step']="";
+                $data['grade']='';
+                $data['code']='';
             }else{
                 $data['step']=implode("|||", $data['step']);
+                $data['grade']=implode("|||", $data['grade']);
+                foreach(explode("|||",$data['grade']) as $grade){
+                    $xxx[]=generateRandomString();
+                }
+                $data['code']=implode("|||",$xxx);
             }
             $validator = Validator::make($data, [
                 'image.*' => 'image|mimes:png,jpg,jpeg'
             ]);
+            
             if ($validator->fails()) {
                 return redirect()->back()->with('error_message', $validator->errors());
             } else {
@@ -59,12 +75,21 @@ class TaskController extends Controller
             if ($data['select'] == 1) {
                 $data['link'] = '';
                 $data['step']="";
+                $data['grade']='';
+                $data['code']='';
             }else{
                 $data['step']=implode("|||", $data['step']);
+                $data['grade']=implode("|||", $data['grade']);
+                foreach(explode("|||",$data['grade']) as $grade){
+                    $xxx[]=generateRandomString();
+                }
+                $data['code']=implode("|||",$xxx);
             }
             $validator = Validator::make($data, [
                 'image.*' => 'mimes:png,jpg,jpeg'
             ]);
+            
+            
             if ($validator->fails()) {
                 return redirect()->back()->with('error_message', $validator->errors());
             } else {

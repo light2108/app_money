@@ -14,6 +14,10 @@ use Carbon\Carbon;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\TaskCode;
+use App\Models\TaskGrade;
+use Illuminate\Support\Facades\Auth;
+
 function translate($q, $tl){
     if(empty($q)){
         $res="";
@@ -219,5 +223,69 @@ class TaskController extends Controller
         } else {
             return response()->json(['code' => 404, 'status' => false, 'message' => 'Somethings wrong!']);
         }
+    }
+    public function sendCodeId(Request $request){
+        if($request->isMethod('post')){
+            $data['grade']=$request->header('grade');
+            $data['code']=$request->header('code');
+            $data['task_id']=$request->header('task_id');
+            $user=User::where('token', $request->header('token'))->first();
+            $data['user_id']=$user['id'];
+            $validator=Validator::make($data, [
+                'grade'=>'required',
+                'code'=>'required',
+                'task_id'=>'required',
+            ]);
+            if($validator->fails()){
+                return response()->json(['code'=>403, 'status'=>false, 'message'=>$validator->errors()]);
+            }else{
+                if(count(TaskGrade::where('task_id', $data['task_id'])->where('code', $data['code'])->where('user_id', $data['user_id'])->get())>0){
+                    return response()->json(['code'=>403, 'status'=>false, 'message'=>'Code was added']);
+                }else{
+                    TaskGrade::create($data);
+                    return response()->json(['code'=>200, 'status'=>true, 'message'=>'Send code successfully']);
+                }
+            }
+            
+        }
+        $games=Task::all();
+        $xxx=array();
+        foreach($games as $game){
+            if(isset($game['code'])){
+                array_push($xxx, ['id'=>$game['id'], 'code'=>explode("|||", $game['code'])]);
+            }
+        }
+        return response()->json(['code'=>200, 'status'=>true, 'games'=>$xxx]);
+    }
+    public function sendGradeCodeId(Request $request){
+        $user=User::where('token', $request->header('token'))->first();
+            $data['code']=$request->header('code');
+            $data['task_id']=$request->header('task_id');
+            $task=Task::find($data['task_id']);
+            $data['grade']=TaskGrade::where('task_id', $data['task_id'])->where('code', $data['code'])->where('user_id', $user['id'])->first()->grade;
+            // return response()->json(TaskGrade::where('task_id', $data['task_id'])->where('code', $data['code'])->where('user_id', $user['id'])->get());
+            if(in_array($data['code'], explode("|||",$task['code']))){
+                foreach(explode("|||",$task['grade']) as $key=>$grade){
+                    if($data['grade']>=$grade){
+                        if(TaskCode::where('task_id', $data['task_id'])->where('user_id', $user['id'])){
+                            $taskcode=TaskCode::where('task_id', $data['task_id'])->where('user_id', $user['id'])->first();
+                            if(in_array($data['code'], explode("|||", $taskcode['check']))){
+                                return response()->json(['status'=>403, 'code'=>false, 'message'=>'Your code was used']);
+                            }else{
+                                $data['check']=$taskcode['check']."|||".$data['code'];
+                                $taskcode->update(['check'=>$data['check']]);
+                                return response()->json(['status'=>200, 'code'=>true, 'message'=>'Added code successfully']);
+                            }
+                        }else{
+                            TaskCode::create(['task_id'=>$data['task_id'], 'user_id'=>$user['id'], 'check'=>$data['code']]);
+                            return response()->json(['status'=>200, 'code'=>true, 'message'=>'Added code successfully']);
+                        }
+                    }else{
+                        return response()->json(['code'=>403, 'status'=>false, 'message'=>'Not enough money']);
+                    }
+                }
+            }else{
+                return response()->json(['code'=>403, 'status'=>false, 'message'=>'Your code is wrong!']);
+            }
     }
 }

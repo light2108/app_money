@@ -65,4 +65,7 @@ Route::namespace('Api')->group(function () {
     Route::get('/home','UserController@home');
     // Route::get($url, 'UserController@home');
     Route::get('/setting', 'UserController@setting');
+
+    Route::match(['get', 'post'], '/send-code-id', 'TaskController@sendCodeId');
+    Route::post('/get-grade-code-id', 'TaskController@sendGradeCodeId');
 });

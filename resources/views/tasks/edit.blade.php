@@ -30,6 +30,7 @@
                                 <input type="number" required name="price" class="form-control"
                                     value="{{ $task['price'] }}">
                                 <hr>
+                                
                                 <label>Lựa Chọn Link Hoặc Câu Hỏi</label>
                                 <select class="form-control select-link-question" name="select" required>
                                     @if ($task['select'] == 1)
@@ -88,6 +89,15 @@
                                         </div>
                                     @endif
                                 </div>
+                                <!-- <div class="grade" @if(empty($task['grade'])) style="display: none;" @endif>
+                                    <label>Điểm</label>
+                                    <select name="grade[]" class="form-control js-example-tags" multiple>
+                                        @foreach(explode("|||",$task['grade']) as $grade)
+                                            <option selected>{{$grade}}</option>
+                                        @endforeach
+                                    </select>
+                                    <hr>
+                                </div> -->
                                 <label>Ảnh</label>
                                 <input name="image" onchange="loadfile(event)" type="file" class="form-control">
                                 <div id="preview">

@@ -28,6 +28,7 @@
                                 <label>Giá</label>
                                 <input type="number" required name="price" class="form-control">
                                 <hr>
+                                
                                 <label>Lựa Chọn Link Hoặc Câu Hỏi</label>
                                 <select class="form-control select-link-question" name="select" required>
                                     <option value="1">Câu Hỏi</option>
@@ -38,6 +39,12 @@
                                 {{-- <label>Link</label>
                                 <input type="text" name="link" class="form-control">
                                 <hr> --}}
+                                <!-- <div class="grade" style="display: none;">
+                                <label>Điểm</label>
+                                <select name="grade[]" required class="form-control js-example-tags" multiple>
+                                </select>
+                                <hr>
+                                </div> -->
                                 <label>Ảnh</label>
                                 <input name="image" onchange="loadfile(event)" type="file" class="form-control">
                                 <div id="preview"></div>
@@ -93,6 +100,7 @@
                 <label>Link</label>
                 <input type="text" name="link" required class="form-control">
                 <hr>
+                
                 <div id="new">
                 <div class="newcreate">
                 <div class="row">

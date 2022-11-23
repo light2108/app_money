@@ -233,8 +233,11 @@ class UserController extends Controller
 
         $data = $this->pagination($task_ads_merger);
         $data->withPath('/api/home');
-
-        return response()->json(['code' => 200, 'status' => true, 'award_day' => AwardDay::first()->money, 'banner' => $new_banner, 'task_ads_merger' => $data, 'user_money' => $user['money']]);
+        if(strtotime('+24 hours', strtotime($user['updated_at'])) - strtotime(Carbon::now()) > 0&&$user['check'] == 1){
+            return response()->json(['code' => 200, 'status' => true,'check'=>1, 'award_day' => AwardDay::first()->money, 'banner' => $new_banner, 'task_ads_merger' => $data, 'user_money' => $user['money']]);
+        }else{
+            return response()->json(['code' => 200, 'status' => true,'award_day' => AwardDay::first()->money, 'banner' => $new_banner, 'task_ads_merger' => $data, 'user_money' => $user['money']]);
+        }
     }
     public function setting(Request $request)
     {
